@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Total Cases Closed and LSC Funding by State</title>
+		<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+
+		<script type='text/javascript'>
+			var tdata;
+			
+			function getData(apiURL, srcname, sqlselect) {
+				$.ajax({
+					url: apiURL, 
+					dataType: "jsonp", 
+					data:{
+						name: srcname, 
+						query: sqlselect, 
+						format: "jsonlist"
+					}, 
+					success: function(data) {			
+						var keys = data["keys"]; 
+						var tdata = data["data"]; 
+						var tab = $("<table>"); 
+						tab.append($("<tr><th>" + keys.join("</th><th>") + "</th></tr>")); 
+						for (var i = 0; i < tdata.length; i++)
+							tab.append($('<tr><td>' + tdata[i].join("</td><td>") + "</td></tr>")); 
+						
+						$('#output').html(tab);
+					}
+				});
+			}
+			
+			function createTable() {
+				getData("https://api.scraperwiki.com/api/1.0/datastore/sqlite", "lsc_data_scraper", "select state, CSR11_Per from swdata");
+			}
+		</script>
+	</head>
+
+    <body onload='createTable()'>
+	<h1>Total Cases Closed and LSC Funding by State</h1>
+        <div id="output"></div>
+    </body>
+<html>

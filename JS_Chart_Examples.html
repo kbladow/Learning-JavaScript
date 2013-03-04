@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Bar and Pie Charts</title>
+		<script type='text/javascript'>
+			var barContext;
+			var pieContext;
+			
+			function pie(progress, value) {
+				pieContext.beginPath();
+				pieContext.fillStyle = "hsl("+(progress * 360)+", 80%, 60%)";
+				pieContext.moveTo(100, 150);
+				pieContext.arc(100, 150, 100, progress*2*Math.PI, (progress+value)*2*Math.PI);
+				pieContext.fill();
+			}
+			
+			function bar(x, y) {
+				rectangle("rgb(64, 64, 128)", 0, x*22, y*10, 20);
+			}
+			
+			function rectangle(color, x, y, width, height) {
+				barContext.fillStyle = color;
+				barContext.fillRect(x, y, width, height);
+			}
+			
+			function drawCharts() {				
+				var barCanvas = document.getElementById("bar-drawing");
+				barContext = barCanvas.getContext("2d");
+				
+				var data = [4, 9, 12, 16, 2, 8];
+				for (i in data) {
+					bar(i, data[i]);
+				}
+				
+				var pieCanvas = document.getElementById("pie-drawing");
+				pieContext = pieCanvas.getContext("2d");
+				data = [0.1, 0.1, 0.5, 0.3];
+				var progress = 0;
+				for (i in data) {
+					pie(progress, data[i]);
+					progress += data[i];
+				}
+			}
+		</script>
+	</head>
+
+	<body onload='drawCharts()'>
+		<h1>Drawing Charts</h1>
+		<canvas id='bar-drawing' width=600; height=400;></canvas>
+		<canvas id='pie-drawing' width=600; height=400;></canvas>
+	</body>
+</html>

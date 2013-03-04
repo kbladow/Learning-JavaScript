@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+<head>
+	<title>Knock Knock Joke</title>
+	<script type='text/javascript'>
+
+		function joke() {
+			var response=prompt('Knock! Knock!','');
+
+			if (response!=null && response!="" && (response='Who\'s there?' || 'Who is there?')) {
+				var response2=prompt('Cows go.');
+
+				if(response2!=null && response2!="" && (response2='Cows go who?' || 'Cows go who')) {
+					alert('No, cows go moo!');
+				}
+				else {
+					alert('Be a sport!')
+				}
+			}
+			else {
+				alert('Be a sport!');
+			}
+		}
+			</script>
+</head>
+<body onload='joke()'>
+	<p>It's time for a knock knock joke.</p>
+</body>
+</html>

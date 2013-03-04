@@ -1,0 +1,76 @@
+<!doctype html>
+<html>
+	<head>
+		<title>Total Cases Closed and LSC Funding by State</title>
+		<script type="text/javascript" src="jquery-1.7.1.min.js"></script>
+		<script src="http://d3js.org/d3.v2.js"></script>
+
+		<style type="text/css">
+			.chart div {font: 10px sans-serif; background-color: #FFCCFF; padding: 1px; margin: 1px; color: black;}
+		</style>
+
+		<script type='text/javascript'>
+			function getData(apiURL, srcname, sqlselect) {
+					$.ajaxSetup({
+						type: "GET", 
+						dataType: "jsonp", 
+						url: apiURL, 
+						error: function(jq, status) { 
+							alert(status); 
+						}
+					});
+				
+					$.ajax({
+						data:{
+						name: srcname, 
+						query: sqlselect,
+						format: "jsonlist"
+					}, 
+					success: function(data) {	
+					
+						var keys = data["keys"]; 
+						var tdata = data["data"]; 
+						
+						var states = [];
+						var lscdata = [];
+						
+						for (var i = 0; i < tdata.length; i++) {
+				
+							states.push(tdata[i][0]);
+							lscdata.push(tdata[i][1]);
+						}
+						
+						var chart = d3.select("body").append("div").attr("class", "chart");
+						var x = d3.scale.linear().domain([0, d3.max(lscdata)]).range(["0px", chart.style("width")]);
+
+						chart.selectAll("div").data(lscdata).enter().append("div").style("width", x).text(
+						
+						function(d) { 
+						var e;
+						
+						for (var i = 0; i < lscdata.length; i++) {
+							if (lscdata[i] == d) {
+								e = states[i];
+								i = lscdata.length;
+							}	
+						}	
+						var myFormat = d3.format(",");
+						return e + ": $" + myFormat(d)
+						
+						});
+					}
+				});
+			}
+			
+			function drawCharts() {		
+				getData("https://api.scraperwiki.com/api/1.0/datastore/sqlite", "lsc_data_scraper", "select state, Funding11 from swdata");	
+			}
+			
+			//make this so that the second item in the SELECT can be picked by the user
+		</script>
+	</head>
+
+    <body onload='drawCharts()'>
+	<h1>Total Cases Closed and LSC Funding by State</h1>
+    </body>
+<html>
